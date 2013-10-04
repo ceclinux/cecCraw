@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
 
+
 public class URLConnectionReader {
 	public static void main(String[] args) throws Exception {
 		System.out.println(getURLContent(args[0], "http://www.qq.com",
