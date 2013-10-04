@@ -9,16 +9,6 @@ public class URLConnectionReader {
 	public static void main(String[] args) throws Exception {
 		System.out.println(getURLContent(args[0], "http://www.qq.com",
 				new LinkedList<String>()));
-		// String
-		// a="<a href="http://sports.qq.com/a/20130929/005806.htm" target="_blank" class="
-		// qm_c_2 ">鲁能若不胜便送恒大夺冠</a>       ";
-		// String r=""<a.*href=\"([^\"]*)\"[^>]*>([^>]*恒大[^<]*)</a>";";
-		// System.out.println(r.replaceAll("(?<=>)(.*?习近平.*?)(?=</a>)", ""));
-		// Pattern p=Pattern.compile(r);
-		// Matcher m=p.matcher(a);
-		// while(m.find()!=false){
-		// System.out.print(m.group(2));
-		// }
 
 	}
 
