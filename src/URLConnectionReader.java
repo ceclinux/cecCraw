@@ -35,7 +35,6 @@ public class URLConnectionReader {
 			// System.out.println(m.group(2));
 			if (!l.contains(m.group(2))) {
 				l.add(m.group(2));
-				// System.out.println(l);
 				if (!urlin.equals("") && urlin.contains("qq")) {
 					getURLContent(keyword, urlin, l);
 				}
