@@ -13,3 +13,5 @@
 
 javac 编译src里面的文件
 `java URLConnectionReader 关键字`
+
+[The RSS feed of this project]http://githubtags.higgsboson.tk/github/ceclinux/cecCraw.atom
