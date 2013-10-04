@@ -7,7 +7,8 @@ import java.io.*;
 
 public class URLConnectionReader {
 	public static void main(String[] args) throws Exception {
-		System.out.println(getURLContent(args[0],"http://www.qq.com", new LinkedList<String>()));
+		System.out.println(getURLContent(args[0], "http://www.qq.com",
+				new LinkedList<String>()));
 		// String
 		// a="<a href="http://sports.qq.com/a/20130929/005806.htm" target="_blank" class="
 		// qm_c_2 ">鲁能若不胜便送恒大夺冠</a>       ";
@@ -21,8 +22,8 @@ public class URLConnectionReader {
 
 	}
 
-	public static LinkedList<String> getURLContent(String keyword,String url, LinkedList<String> l)
-			throws Exception {
+	public static LinkedList<String> getURLContent(String keyword, String url,
+			LinkedList<String> l) throws Exception {
 		URL oracle = new URL(url);
 		URLConnection yc = oracle.openConnection();
 		// solve the Chinese character problems
@@ -35,24 +36,23 @@ public class URLConnectionReader {
 		}
 		String urlin = "";
 		String t = s.toString();
-		String r = "<a([^>]*)>([^<]*"+keyword+"[^>]*)</a>";
+		String r = "<a([^>]*)>([^<]*" + keyword + "[^>]*)</a>";
 		Pattern p = Pattern.compile(r);
 		Matcher m = p.matcher(t);
 		while (m.find() != false) {
 			urlin = m.group(1).replaceAll(".*href=\"([^\"]*)\".*", "$1");
-//			System.out.println(m.group());
-//			System.out.println(m.group(2));
+			// System.out.println(m.group());
+			// System.out.println(m.group(2));
 			if (!l.contains(m.group(2))) {
 				l.add(m.group(2));
-//				System.out.println(l);
+				// System.out.println(l);
 				if (!urlin.equals("") && urlin.contains("qq")) {
-					getURLContent(keyword,urlin, l);
+					getURLContent(keyword, urlin, l);
 				}
 			}
 		}
 		in.close();
 		return l;
 	}
-
 
 }
