@@ -1,9 +1,10 @@
-# 1.4 版本
+# 1.5 版本
 
-_此版本的代码质量很渣，仅为了完成功能和测试_
+_此版本的代码质量很渣，仅为了完成功能和测试_  
 把原来的类分成了两个类，一个是类库，一个是测试类，测试类的代码不忍直视，类库的还行= =
 我所谓的文本的递归查询是指h（标题）的查询还有p（段落）的查询，如果你还要表格内文本查询，列表内文本查询。。请q我
 请uncomment这几行进行测试
+
 
 ```
 	system.out.println("下面是标题测试(h)");
@@ -17,9 +18,15 @@ _此版本的代码质量很渣，仅为了完成功能和测试_
 - 超链接的递归查询
 - **文本的递归查询**
 
-##新增加的功能(相比于1.3)
+##新增加的功能(相比于1.4)
 
-- **文本的递归查询**
+- 对于http://www.bbc.co.uk此类网站的超链接的奇葩方式进行正则的修改
+
+```
+<a href="/news/world-asia-24504882" title="Vietnam state funeral for general" class="heroLink" rev="sport|homepage|na|r|t|i|hero|content"> <span class="headline">Vietnam state funeral for general</span> <img src="http://ichef.bbci.co.uk/wwhp/ic/news/144-81/70440000/jpg/_70440101_019619175.jpg" alt="Coffin of General Vo Nguyen Giap lies in state. 12 Oct 2013" width="144" height="81" /> </a>
+```
+
+- 对于新浪网上用超链接做主页之类的东西进行忽略`href="javascript:;"`
 
 ##需要做的是
 
@@ -32,6 +39,7 @@ _此版本的代码质量很渣，仅为了完成功能和测试_
 - 无法查询英文，空格不见了(fixed)
 - 只能递归查询qq里面的内容(fixed)
 - 查询的字符乱码(fixed)
+- 查询qq网页时候，明明该网站设置为gb2312编码，可是这样便无法显示“囧”字
 
 ##如何使用
 
