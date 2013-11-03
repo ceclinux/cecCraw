@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.font.ImageGraphicAttribute;
 import java.io.*;
 
 public class URLConnectionUtils {
-	private static final String GET_URL_REGEX = ".*href=\"([^\"]*)\".*";
-	private static final String A_TAG_REGEX = "<[a-zA-Z]+[^>]*>|</[a-zA-Z]*[^>]*>";
-	private static final String HYPERLINK_REGEX = "<a\\s[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*>(.*?)</a>";
-	private static HashMap<String, String> regex_content_map = new HashMap<String, String>();
-	private static HashSet<String> pCon=new HashSet<String>();
-	private static HashSet<String> hCon=new HashSet<String>();
+	protected static final String GET_URL_REGEX = ".*href=\"([^\"]*)\".*";
+	protected static final String A_TAG_REGEX = "<[a-zA-Z]+[0-9]?[^>]*>|</[a-zA-Z]+[0-9]?[^>]*>";
+	protected static final String HYPERLINK_REGEX = "<a\\s[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*>(.*?)</a>";
+	protected static HashMap<String, String> regex_content_map = new HashMap<String, String>();
+	protected static HashSet<String> pCon=new HashSet<String>();
+	protected static HashSet<String> hCon=new HashSet<String>();
 	
 	HashSet<String> hyperLinkTestList = new HashSet<String>();
 
@@ -37,11 +38,11 @@ public class URLConnectionUtils {
 	}
 
 	public void setKeyword(String keyword) {
-		this.keyword = keyword.toLowerCase();
+		this.keyword = keyword;
 	}
 
 	private URL url;
-	private String keyword;
+	protected String keyword;
 
 	public URLConnectionUtils(String url, String keyword) {
 		try {
@@ -255,7 +256,7 @@ public class URLConnectionUtils {
 	 * @param url
 	 * @return the matcher that find and parse the hyperLink of the url
 	 */
-	private static Matcher getHyperLinkMatcher(URL url) {
+	protected static Matcher getHyperLinkMatcher(URL url) {
 		String keywordSearchString = HYPERLINK_REGEX;
 		Pattern p2 = Pattern.compile(keywordSearchString);
 		String urlContent = URLConnectionUtils.getUrlContent(url);
@@ -263,17 +264,17 @@ public class URLConnectionUtils {
 		return matcher2;
 	}
 
-	private String getKeySentence(Matcher hyperMatcher) {
+	protected String getKeySentence(Matcher hyperMatcher) {
 		// the second group of the hyperMatch is the keysentence
 		String keySent = hyperMatcher.group(2)
 				.replaceAll("<[^>]*>|</[^>]*>", "");
 		if (keySent.contains(keyword)) {
-			return keySent.replaceAll(" ","");
+			return keySent;
 		}
 		return null;
 	}
 
-	private void getUrlText(URL url, String contentTag,HashSet<String> h) throws IOException {
+	protected void getUrlText(URL url, String contentTag,HashSet<String> h) throws IOException {
 		String urlContent = URLConnectionUtils.getUrlContent(url);
 //		 System.out.println("urlContent: "+urlContent);
 		try {

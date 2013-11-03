@@ -1,17 +1,20 @@
-# 1.6 版本
+# 1.7 版本
 
-_此版本的代码质量很渣，仅为了完成功能和测试_  
-把原来的类分成了两个类，一个是类库，一个是测试类，测试类的代码不忍直视，类库的还行= =
-我所谓的文本的递归查询是指h（标题）的查询还有p（段落）的查询，如果你还要表格内文本查询，列表内文本查询。。请q我
-请uncomment这几行进行测试
+将原来的代码基本上都做了整理，代码看起来好看多了，但是效率还是不够高
 
+##使用
+`URLConnReaderTester`中第八行，若要大小写严格搜索，则
 
 ```
-	system.out.println("下面是标题测试(h)");
-	testRegex(keyword, url, "<h[0-6][A-Za-z0-9]*>(.*?)</h[0-6]>");
-	System.out.println("文本测试(p)");
-	 testRegex(keyword, url, "<p\\s?[A-Za-z0-9^>]*>(.*?)</p>");
+URLConnectionUtils urlconn = new URLConnectionUtils(URL, KEYWORD);
 ```
+反之则改成
+
+```
+URLConnectionUtils urlconn = new URLConnectionIgnoreCase(URL, KEYWORD);
+```
+
+
 
 ##目前完成了
 
@@ -39,4 +42,4 @@ _此版本的代码质量很渣，仅为了完成功能和测试_
 - url拼接的错误，直接用类库`new URL(url,urlLink);`来实现拼接(fixed)
 - 正则表达式中[]里面的-的使用错误导致p匹配错误(fixed)
 - 超链接出现javascript或者php情况的解析
-
+- 大小写的问题
