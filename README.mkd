@@ -1,19 +1,11 @@
-# 1.7 版本
+# 1.8 版本
 
 将原来的代码基本上都做了整理，代码看起来好看多了，但是效率还是不够高
+**WAIT**会等待很长时间，程序并没有挂，耐心等吧
 
 ##使用
-`URLConnReaderTester`中第八行，若要大小写严格搜索，则
 
-```
-URLConnectionUtils urlconn = new URLConnectionUtils(URL, KEYWORD);
-```
-反之则改成
-
-```
-URLConnectionUtils urlconn = new URLConnectionIgnoreCase(URL, KEYWORD);
-```
-
+运行SimFontEnd即可
 
 
 ##目前完成了
@@ -42,4 +34,5 @@ URLConnectionUtils urlconn = new URLConnectionIgnoreCase(URL, KEYWORD);
 - url拼接的错误，直接用类库`new URL(url,urlLink);`来实现拼接(fixed)
 - 正则表达式中[]里面的-的使用错误导致p匹配错误(fixed)
 - 超链接出现javascript或者php情况的解析
-- 大小写的问题
+- 大小写的问题(fixed)
+- 报错，将console移到gui上

@@ -4,22 +4,32 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import javax.swing.UIManager;
 
 public class SimFontEnd extends JFrame {
-	JTextField urlField = new MyTextField(15);
-	JTextField keyWord = new MyTextField(5);
-	JTextArea resultArea = new MyTextArea("Result is here");
+	static JTextField urlField = new MyTextField("http://", 15);
+	static JTextField keyWordField = new MyTextField(5);
+	static JTextField depthField = new JTextField(2);
+	static JTextArea resultArea = new MyTextArea("Result is here");
+	JScrollPane resultPane = new JScrollPane(resultArea);
 	JPanel queryPanel = new JPanel();
 	JButton searchBt = new MyButton("Search");
+	ButtonGroup caseGrp = new ButtonGroup();
+	JRadioButton ignoreCaseRb = new MyRadioButton("Ignore", true);
+	JRadioButton strictCaseRb = new MyRadioButton("Strict", false);
 
 	public static void main(String[] args) throws InstantiationException {
 		try {
@@ -39,16 +49,63 @@ public class SimFontEnd extends JFrame {
 
 	public SimFontEnd() throws InstantiationException {
 
-		setSize(700, 500);
-	
-
-		queryPanel.add(new MyLabel("URL"),FlowLayout.LEFT);
+		setSize(800, 500);
+		queryPanel.add(new MyLabel("URL"), FlowLayout.LEFT);
 		queryPanel.add(urlField);
 		queryPanel.add(new MyLabel("KeyWord"));
-		queryPanel.add(keyWord);
+		queryPanel.add(keyWordField);
+		queryPanel.add(new MyLabel("Depth"));
+		queryPanel.add(depthField);
 		queryPanel.add(searchBt);
+		caseGrp.add(ignoreCaseRb);
+		caseGrp.add(strictCaseRb);
+		queryPanel.add(ignoreCaseRb);
+		queryPanel.add(strictCaseRb);
 		add(queryPanel, BorderLayout.NORTH);
-		add(resultArea, BorderLayout.CENTER);
+		add(resultPane, BorderLayout.CENTER);
+		resultArea.setWrapStyleWord(true);
+		searchBt.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				resultArea.setText("WAIT...");
+				System.out.println(SimFontEnd.urlField.getText());
+				Runnable r = new SearchThread(urlField.getText(), keyWordField
+						.getText(), getCase(), Integer.parseInt(depthField
+						.getText()));
+				Thread t = new Thread(r);
+				t.start();
+			}
+
+			private boolean getCase() {
+				return ignoreCaseRb.isSelected();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 }
 
@@ -113,6 +170,11 @@ class MyTextField extends JTextField {
 		setFont(new Font("Monaco", Font.PLAIN, 15));
 	}
 
+	public MyTextField(String string, int i) {
+		super(string, i);
+		setFont(new Font("Monaco", Font.PLAIN, 15));
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -124,3 +186,21 @@ class MyTextField extends JTextField {
 	}
 }
 
+class MyRadioButton extends JRadioButton {
+
+	public MyRadioButton(String string, boolean b) {
+		// TODO Auto-generated constructor stub
+		super(string, b);
+		setFont(new Font("Monaco", Font.PLAIN, 15));
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+		super.paintComponent(g2);
+	}
+}

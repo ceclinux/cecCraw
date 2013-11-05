@@ -50,9 +50,9 @@ public class URLConnectionIgnoreCase extends URLConnectionUtils{
 					String keySentence = getKeySentence(hyperMatcher);
 					// if the array which stores the key sentence has already
 					// had this sentence
-					if (!hyperLinkTestList.contains(keySentence)) {
+					if (!hyperLinkTestSet.contains(keySentence)) {
 						// add the key sentence
-						hyperLinkTestList.add(keySentence);
+						hyperLinkTestSet.add(keySentence);
 //						System.out.println(keySentence);
 						// get the domain key word of the url to determine
 						// whether this hyperlink is an external link

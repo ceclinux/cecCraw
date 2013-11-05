@@ -1,4 +1,5 @@
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,14 +11,15 @@ import java.awt.font.ImageGraphicAttribute;
 import java.io.*;
 
 public class URLConnectionUtils {
+	
 	protected static final String GET_URL_REGEX = ".*href=\"([^\"]*)\".*";
 	protected static final String A_TAG_REGEX = "<[a-zA-Z]+[0-9]?[^>]*>|</[a-zA-Z]+[0-9]?[^>]*>";
 	protected static final String HYPERLINK_REGEX = "<a\\s[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*>(.*?)</a>";
 	protected static HashMap<String, String> regex_content_map = new HashMap<String, String>();
-	protected static HashSet<String> pCon=new HashSet<String>();
-	protected static HashSet<String> hCon=new HashSet<String>();
-	
-	HashSet<String> hyperLinkTestList = new HashSet<String>();
+	protected static HashSet<String> pCon = new MyHashSet<String>();
+	protected static HashSet<String> hCon = new MyHashSet<String>();
+	protected static HashSet<String> hyperLinkTestSet = new MyHashSet<String>();
+	protected static MyArrayList<HashSet<String>> dataList = new MyArrayList<HashSet<String>>();
 
 	public URL getUrl() {
 		return url;
@@ -47,24 +49,28 @@ public class URLConnectionUtils {
 	public URLConnectionUtils(String url, String keyword) {
 		try {
 			this.url = new URL(url);
-			this.keyword=keyword;
+			this.keyword = keyword;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("This is not a valid URL");
 
 		}
-		regex_content_map
-				.put("h", "<[hH][0-6][\\s\"=A-Za-z0-9:^>]*>(.*?)</[hH][0-6]>");
-		regex_content_map.put("p", "<[pP][\\sa-zA-Z0-9\":\\-=_^>]*>(.*?)</[pP]>");
+		regex_content_map.put("h",
+				"<[hH][1-6][\\-\\s\"=A-Za-z0-9:^>]*>(.*?)</[hH][1-6]>");
+		regex_content_map.put("p",
+				"<[pP][\\sa-zA-Z0-9\":\\-=_^>]*>(.*?)</[pP]>");
+		dataList.add(pCon);
+		dataList.add(hCon);
+		dataList.add(hyperLinkTestSet);
 	}
 
 	public HashSet<String> getHyperLinkTestList() {
-		return hyperLinkTestList;
+		return hyperLinkTestSet;
 	}
 
-	public void setHyperLinkTestList(HashSet<String> hyperLinkTestList) {
-		this.hyperLinkTestList = hyperLinkTestList;
+	public void setHyperLinkTestSet(HashSet<String> hyperLinkTestSet) {
+		this.hyperLinkTestSet = hyperLinkTestSet;
 	}
 
 	/**
@@ -189,35 +195,34 @@ public class URLConnectionUtils {
 		if (depth > 0) {
 
 			// get paragraph
-			System.out.println("url: "+url);
-			getUrlText(url, "p",pCon);
-		
+			System.out.println("url: " + url);
+			getUrlText(url, "p", pCon);
+
 			// get header
-			getUrlText(url, "h",hCon);
+			getUrlText(url, "h", hCon);
 
 			Matcher hyperMatcher = getHyperLinkMatcher(url);
-	
 
 			while (hyperMatcher.find() != false) {
 				// the first group of the hyperMatcher is the url
-//				System.out.println(hyperMatcher.group());
+				// System.out.println(hyperMatcher.group());
 				String urlLink = hyperMatcher.group(1).replaceAll(
 						GET_URL_REGEX, "$1");
-//				System.out.println(urlLink);
-				try{
+				// System.out.println(urlLink);
+				try {
 					// make the new url
-//					System.out.println("urlLink: "+urlLink);
+					// System.out.println("urlLink: "+urlLink);
 					URL y = new URL(url, urlLink);
-					String newURL=y.toString();
+					String newURL = y.toString();
 
 					// get the keySentence of the new URL
 					String keySentence = getKeySentence(hyperMatcher);
 					// if the array which stores the key sentence has already
 					// had this sentence
-					if (!hyperLinkTestList.contains(keySentence)) {
+					if (!hyperLinkTestSet.contains(keySentence)) {
 						// add the key sentence
-						hyperLinkTestList.add(keySentence);
-//						System.out.println(keySentence);
+						hyperLinkTestSet.add(keySentence);
+						// System.out.println(keySentence);
 						// get the domain key word of the url to determine
 						// whether this hyperlink is an external link
 						String domainKey = URLConnectionUtils.getDomainKey(url);
@@ -226,8 +231,9 @@ public class URLConnectionUtils {
 						}
 					}
 				} catch (MalformedURLException e) {
-					System.out.println("SORRY!!!I can't parse " + urlLink + " now");
-//					e.printStackTrace();
+					System.out.println("SORRY!!!I can't parse " + urlLink
+							+ " now");
+					// e.printStackTrace();
 				}
 
 			}
@@ -266,24 +272,25 @@ public class URLConnectionUtils {
 
 	protected String getKeySentence(Matcher hyperMatcher) {
 		// the second group of the hyperMatch is the keysentence
-		String keySent = hyperMatcher.group(2)
-				.replaceAll("<[^>]*>|</[^>]*>", "");
+		String keySent = hyperMatcher.group(2).replaceAll("<[^>]*>|</[^>]*>",
+				"");
 		if (keySent.contains(keyword)) {
 			return keySent;
 		}
 		return null;
 	}
 
-	protected void getUrlText(URL url, String contentTag,HashSet<String> h) throws IOException {
+	protected void getUrlText(URL url, String contentTag, HashSet<String> h)
+			throws IOException {
 		String urlContent = URLConnectionUtils.getUrlContent(url);
-//		 System.out.println("urlContent: "+urlContent);
+		// System.out.println("urlContent: "+urlContent);
 		try {
 			Pattern p = Pattern.compile(regex_content_map.get(contentTag));
 			Matcher matcher = p.matcher(urlContent);
 			while (matcher.find()) {
 				String content = matcher.group(1).replaceAll(A_TAG_REGEX, "");
-				System.out.println("content: "+content);
-//				System.out.println("keyword: "+keyword);
+				System.out.println("content: " + content);
+				// System.out.println("keyword: "+keyword);
 				if (content.contains(keyword)) {
 					h.add(content);
 				}
